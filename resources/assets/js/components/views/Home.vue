@@ -272,6 +272,9 @@ export default {
     	return newData;
     	
     },
+    goToSite(){
+    	console.log("aquii");
+    },
     paintPlaces(map){
     	console.log(this.tempMapPlaces);
     	var _this=this;
@@ -284,10 +287,14 @@ export default {
 			    el.style.backgroundImage = 'url('+this.formatImagesLogo(this.tempMapPlaces[i].logo[0].url,"small")+')';
 			    el.style.width = 30 + 'px';
 			    el.style.height = 30 + 'px';
+			    el.id =this.tempMapPlaces[i].id;
 			    var id=this.tempMapPlaces[i].id;
 			    var name=this.tempMapPlaces[i].name;
+	            el.setAttribute("onclick","window.location='/site/"+id+"/"+name+"'");
+ 
 			    el.addEventListener('click', function() {
-			        _this.scrollIntoView(id,name);
+			    	console.log(el);
+			        //_this.scrollIntoView(id,name);
 			    });
 
 			    new mapboxgl.Marker(el)
