@@ -1,15 +1,18 @@
 <template>
-	<div class="site-container">
+	<div class="row site-container">
+            <div class="col-xs-12 col-md-12">
+	    <div class="row ">
+                <div class="container-cover-site">
+                    
+                </div>
+            </div>
 	    <div class="row">
-	    	<img src="/img/fondo1_1.jpg" />
-	    </div>
-	    <div class="row">
-	    	<div class="col-md-4 ">
+	    	<div class="col-md-4  col-xs-12">
 	    		<div class="row container-info">
 	    			<div class="col-md-12 container-info-site">
 	    				<div class="row logo-info-site">
 	    					<div class="col-md-3 container-site-logo">
-			    				<img class="logo-site" v-for=" logo in site.logo" v-bind:src="formatImagesLogo(logo.url,'medium')" />
+			    				<img class="logo-site"  v-bind:src="fotmatProfileLogo(site.logo,site.id)" />
 			    			</div>
 			    			<div class="col-md-9">
 			    				<h3>{{site.name}}</h3> 
@@ -18,7 +21,7 @@
 			    						<star-rating v-model="rating" @rating-selected ="openRating"  :star-size="15" :show-rating="false" active-color="#8D98F1"  ></star-rating>
 			    					</div>
 			    					<div class="col-md-7 container-site-visit">
-			    						<strong>234</strong> Visitas
+			    						<strong>{{site.visits}}</strong> Visitas
 			    					</div>
 			    					
 			    				</div>
@@ -26,43 +29,22 @@
 			    				
 			    			</div>
 	    				</div>
-	    				<div class="row container-map-site">
+	    				<div class=" container-map-site">
 		    				<div class="shadow-up">
-		    					
+		    					 
 		    				</div>
-			    						<mapbox  
-										access-token="pk.eyJ1IjoibG9yZG1hY3VzIiwiYSI6ImNqZGdub3B4eDBtb3QyeG45Y3YwMDZnd3YifQ.0c8uzpkL-Ib5UBj8cVBUQA"
-										:map-options="{
-									    	style: 'mapbox://styles/mapbox/light-v9',
-									    	zoom: 13,
-									    	center: [-58.4389656,  -34.6016045],
-									    }"
-										:geolocate-control="{
-											show: false, 
-											 position: 'bottom-right'
-										}"
-										:scale-control="{
-											show: false,
-										}"
-										:fullscreen-control="{
-											show: false
-											}"
-										:nav-control="{
-										show: false
-										}"
-							    		@map-load="mapLoaded"
-
-										></mapbox>
+                                                            <img width="100%" :src="urlmap"   alt="Mapbox Map of -73.7638,42.6564">
+                                                            © <a href='https://www.mapbox.com/map-feedback/'>Mapbox</a> © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>
 								<div class="shadow-down container-work-here">
     								<button v-on:click="showWorkHere()" class="btn-purple pull-right button-work-here">Hoy Trabajo Aquí</button>
 		    					</div>
 		    				</div>
-		    				<div class="row container-services">
+		    				<div class=" container-services">
 		    					<h4>Servicios</h4>
-		    					<p v-for="service in site.services"><img src="/img/wifi.png" /> {{service.name}}</p>
+		    					<p v-for="service in site.services"><img v-bind:src="service.icon" /> {{service.name}}</p>
 		    				</div>
 
-		    				<div class="row container-spaces">
+		    				<div class=" container-spaces">
 		    					<h4>Espacios</h4>
 		    					<p v-for="space in site.spaces"><img src="/img/wifi.png" /> {{space.name}}</p>
 		    				</div>
@@ -70,10 +52,10 @@
 	    			
 	    		</div>
 	    	</div>
-	    	<div class="col-md-8 container-description-site">
+	    	<div class="col-md-8  col-xs-12 container-description-site">
 	    		<div class="row">
 	    			<div class="col-md-12 container-site-gallery">
-	    				<div class="container-image-mini" v-for="(image, index) in images" @click="openGallery(index)" v-bind:style="{ 'background-image': 'url(' + formatImagesGallery(image.src,'uploads','thumbs') + ')' }">
+	    				<div class="container-image-mini" v-for="(image, index) in images" @click="openGallery(index)" v-bind:style="{ 'background-image': 'url(' + image.src + ')' }">
 	    					 
 	    				</div>
  
@@ -93,32 +75,37 @@
 	    			<div class="col-md-12 ">
 	    				<div class="container-site-review ">
 	    						<div class="row">
-	    							<div class="col-md-2 container-review">
-	    								<strong>{{reviewCount.count}}</strong> Reviews 
+	    							<div class="col-md-2 col-6 container-review">
+	    								<strong>{{reviewCount.count}}</strong> comentarios 
 	    							</div>
-	    							<div class="col-md-2">
+	    							<div class="col-md-2 col-6">
     									<star-rating v-model="rating" @rating-selected ="openRating"  :star-size="15" :show-rating="false" active-color="#8D98F1"  ></star-rating>
 
 
 	    							</div>
-	    							<div class="col-md-8">
+	    							<div class="col-md-8 container-opinion-button">
 	    								<button v-on:click="show()" class="btn-purple pull-right">Escribir Opinión</button>
 	    							</div>
 	    						</div>
 	    				</div>
 	    			</div>
 	    		</div>
-	    		<div class="row container-comments" v-for="review in site.reviews">
-	    			<div class="col-md-4">
-	    				<div class="row">
-	    					<div class="col-md-4 container-logo-comments">
+                        
+                        <div class="row container-comments  " v-for="review in reviewsTemp">
+                            <div class="col-md-12 container-site-review-comment">
+                                <div class="row">
+                                    <div class="col-md-4">
+	    				<div class="row  ">
+                                            
+                                            
+	    					<div class="col-md-4 col-2 container-logo-comments">
 			    				<router-link  :key="$route.fullPath"  :to="{name: 'profile', params: { id: review.user.id,name:string_to_slug(review.user.name) }}"  >
-			    					<img class="logo-site" src="/img/logo.png" />
+			    					<img class="logo-site" v-bind:src="review.user.avatar" />
 			    					</router-link>
 	    					</div>
-	    					<div class="col-md-8 container-user-comments">
+	    					<div class="col-md-8 col-10 container-user-comments">
 	    						<h5><router-link  :key="$route.fullPath"  :to="{name: 'profile', params: { id: review.user.id,name:string_to_slug(review.user.name) }}"  >{{review.user.name}}</router-link></h5>
-	    						<p>17 de julio 2017</p>
+	    						<p>{{ review.created_at | moment("DD MMMM, Y") }}</p>
 	    						<star-rating  :rating="review.rating"  read-only :star-size="15" :show-rating="false" active-color="#8D98F1"  ></star-rating>
 
 	    					</div>
@@ -129,33 +116,65 @@
 	    					{{review.review}}
 	    				</p>
 	    			</div>
+                                </div>
+                            </div>
+	    			
+	    		</div>
+                        
+	    		<div class="row container-comments  " v-for="review in site.reviews">
+                            <div class="col-md-12 container-site-review-comment">
+                                <div class="row">
+                                    <div class="col-md-4">
+	    				<div class="row  ">
+                                            
+                                            
+	    					<div class="col-md-4 col-2 container-logo-comments">
+			    				<router-link  :key="$route.fullPath"  :to="{name: 'profile', params: { id: review.user.id,name:string_to_slug(review.user.name) }}"  >
+			    					<img class="logo-site" v-bind:src="review.user.avatar" />
+			    					</router-link>
+	    					</div>
+	    					<div class="col-md-8 col-10 container-user-comments">
+	    						<h5><router-link  :key="$route.fullPath"  :to="{name: 'profile', params: { id: review.user.id,name:string_to_slug(review.user.name) }}"  >{{review.user.name}}</router-link></h5>
+	    						<p>{{ review.created_at | moment("DD MMMM, Y") }}</p>
+	    						<star-rating  :rating="review.rating"  read-only :star-size="15" :show-rating="false" active-color="#8D98F1"  ></star-rating>
+
+	    					</div>
+	    				</div>
+	    			</div>
+	    			<div class="col-md-8 container-review-text">
+	    				<p>
+	    					{{review.review}}
+	    				</p>
+	    			</div>
+                                </div>
+                            </div>
+	    			
 	    		</div>
 	    	</div>
 	    </div>
 
 
-		<sweet-modal ref="modal" class="container-modal-review">
+		<sweet-modal :enable-mobile-fullscreen="false" ref="modal" class="container-modal-review">
 			<div class="row">
 				<div class="col-md-12" v-show="commentFlag">
-					<h3>Escribe un comentario</h3>
-					<p>Esta es una descripcion para invitar al usuario a que haga una review</p>
+					<p>¿Cómo fue tu experiencia?</p>
 				</div>
 				<div class="col-md-12" v-show="ratingFlag">
-					<h3>Califica de uno a 5</h3>
+					<h3>Califica de 1 a 5</h3>
 				</div>
 				<div class="col-md-12" v-show="ratingFlag">
 					<star-rating v-model="modalReview.rating" @rating-selected ="setRating"  :star-size="30" :show-rating="false" active-color="#ffffff" inactive-color="#adadad"    ></star-rating>
 				</div>
 				<div class="col-md-12" v-show="commentFlag">
-					<textarea  v-model="modalReview.commentText" placeholder="Escribe el comentario aqui"></textarea>
+					<textarea  v-model="modalReview.commentText" placeholder="Escribe tu opinión aquí"></textarea>
 				</div>
 				<div class="col-md-12" v-show="commentFlag" >
-					<button v-on:click="postReview()" class="btn-white comment-button">Comentar</button>
+					<button v-on:click="postReview()" class="btn-white comment-button">Opinar</button>
 				</div>
 			</div>
 		</sweet-modal>
 
-	<sweet-modal ref="modalLogin" class="container-modal-review">
+	<sweet-modal  :enable-mobile-fullscreen="false"  ref="modalLogin" class="container-modal-review">
 			<div class="row">
 				<div class="col-md-12" >
 					<h1>{{LoginTitle.toUpperCase()}}</h1>
@@ -169,15 +188,15 @@
 		</sweet-modal>
 
 
-		<sweet-modal ref="modalSuscribe" class="container-modal-review">
+		<sweet-modal  :enable-mobile-fullscreen="false"  ref="modalSuscribe" class="container-modal-review reserv-modal">
 			<div class="row">
-				<div class="col-md-12" >
+			 	<div class="col-md-12" >
 					<h1>Reserva</h1>
-					<p>Por favor confirmanos los siguientes datos</p>
+					<!--<p>Por favor confirmanos los siguientes datos</p>-->
 				</div>  
 
-				<div class="col-md-6 containerInput" >
-					 
+				<div class="col-md-12 containerInput" >
+					     
 					<div class="row">
 						<div class="col-md-3 labelModal">
 							Fecha
@@ -188,7 +207,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-6 containerInput" >
+				<div class="col-md-12 containerInput" >
 					<div class="row">
 						<div class="col-md-3 labelModal">
 							Hora
@@ -202,10 +221,10 @@
 				</div>
 				<div class="col-md-12 containerInput"  >
 				<div class="row">
-					<div class="col-md-6 labelModal">
-						Cuantas personas asistirán
+					<div class="col-md-3 labelModal">
+						Asistentes
 					</div>
-					<div class="col-md-5">
+					<div class="col-md-9">
 
 						 <NumberInputSpinner
 						    :min="0"
@@ -219,13 +238,13 @@
 				</div>
 				</div>
 	
-				<div class="col-md-12 containerInput"  >
+				<div class="col-md-12 containerInput reserv-button"  >  
 					<button v-on:click="postReserv()" class="btn-white comment-button">Reservar</button>
 				</div>
 			</div>
 		</sweet-modal>
 
-
+ </div>
     </div>
 </template>
 
@@ -243,9 +262,13 @@ require('vue-image-lightbox/dist/vue-image-lightbox.min.css')
     export default {
         data: function () {
             return {
-
             	images : [] ,
                 site: [],
+                urlmap:'',
+                title:"",
+                defaultLat:null,
+                defaultLon:null,
+                reviewsTemp:[],
                 selectHour:0,
                 
 		          options : {
@@ -269,30 +292,36 @@ require('vue-image-lightbox/dist/vue-image-lightbox.min.css')
                 },
                 selectedSpace:null,
                 optionHours:[
-                	"00",
-                	"01",
-                	"02",
-                	"03",
-                	"04",
-                	"05",
-                	"06",
-                	"07",
-                	"08",
-                	"09",
-                	"11",
-                	"12",
-                	"13",
-                	"14",
-                	"15",
-                	"16",
-                	"17",
-                	"18",
-                	"19",
-                	"20",
-                	"21",
-                	"22",
-                	"23",
-                	"24",
+                	"07:00 Hs",
+                	"07:30 Hs",
+                	"08:00 Hs",
+                	"08:30 Hs",
+                	"09:00 Hs",
+                	"09:30 Hs",
+                	"11:00 Hs",
+                	"11:30 Hs",
+                	"12:00 Hs",
+                	"12:30 Hs",
+                	"13:00 Hs",
+                	"13:30 Hs",
+                	"14:00 Hs",
+                	"14:30 Hs",
+                	"15:00 Hs",
+                	"15:30 Hs",
+                	"16:00 Hs",
+                	"16:30 Hs",
+                	"17:00 Hs",
+                	"17:30 Hs",
+                	"18:00 Hs",
+                	"18:30 Hs",
+                	"19:00 Hs",
+                	"19:30 Hs",
+                	"20:00 Hs",
+                	"20:30 Hs",
+                	"21:00 Hs",
+                	"21:30 Hs",
+                	"22:00 Hs",
+                	"22:30 Hs",
 
 
                 ],
@@ -337,19 +366,32 @@ require('vue-image-lightbox/dist/vue-image-lightbox.min.css')
                    mixins: [ helpers ],
 
         created: function () {
-
+  
             this.getNotes();
             this.getReviewsCount();
             var d = new Date().toISOString().slice(0,10);
             this.limit=[{ type: 'fromto', from:d}]
-
+            
+            var _this=this;
+              var t = setInterval(function () {
+                          if(!!_this.$route.query.rsv){
+                         _this.showWorkHere();
+                         _this.$route.query.rsv=null;
+                        }
+                        }, 100);
+            
 
         },
-
+        watch:{
+            title(val, old) {
+                console.log("aquii cambio el nombre");
+                document.title = val
+            } 
+        },
         methods: {
-        	LoginMeetWork(){
-
-              this.$router.push({name:"login"})
+        	LoginMeetWork(){ 
+                
+              this.$router.push({name:"register", query: { redirect: "/site/"+this.$route.params.id+"/"+this.$route.params.name+"?rsv=1" }})
 
         	},
         	openRating(val){
@@ -413,29 +455,49 @@ require('vue-image-lightbox/dist/vue-image-lightbox.min.css')
             getNotes: function () {
                 axios.get('/siteSystem/'+this.$route.params.id)
                     .then(response => this.formatSite(response.data) )
-                    .catch(error => console.log(error.response.data));
+                    .catch(error => console.log(error));
             },
             formatSite(data){
             	this.site=data;
-
+        
+        console.log(data);
+        this.urlmap='https://api.mapbox.com/v4/mapbox.emerald/url-https%3A%2F%2Fmeetwork.co%2Fimg%2Fpin_space.png('+data.lon+','+data.lat+')/'+data.lon+','+data.lat+',16/400x300@2x.png?access_token=pk.eyJ1IjoibG9yZG1hY3VzIiwiYSI6ImNqZGdub3B4eDBtb3QyeG45Y3YwMDZnd3YifQ.0c8uzpkL-Ib5UBj8cVBUQA';
+        
+         
+        this.defaultLat=data.lat;
+        this.defaultLon=data.lon;
+                this.title = data.name; 
+                this.site.visits=Math.floor(Math.random() * 26 + 3)
             	var images=[];
             	for (var i = data.images.length - 1; i >= 0; i--) {
-            		
-            		images.push({src:data.images[i].url,caption:data.name,thumb:data.images[i].url})
+            		images.push({src:"https://s3.amazonaws.com/meetworks/full/"+this.site.id+"/"+data.images[i].url,caption:data.name,thumb:"https://s3.amazonaws.com/meetworks/thumbnails/"+this.site.id+"/"+data.images[i].url})
             	}
             	this.images=images;
-            	                    	      this.$refs.lightbox.closeLightBox();
+                this.$refs.lightbox.closeLightBox();
 
             	console.log(this.images);
             }, 
+            shhowReviewsDebug(arr){
+               for(var i =0; i<arr.length; i ++){
+                   console.log(arr[i]);
+               }
+            },
             successReview(data){
-            	this.site.reviews=data.data;
+               /* this.shhowReviewsDebug(this.site.reviews);
+                this.site.reviews.unshift(data.data);
+                console.log("otro despues");
+                this.shhowReviewsDebug(this.site.reviews);
+*/  
+                this.reviewsTemp.unshift(data.data);
+
+            	//this.site.reviews=data.data;
             	this.clearReview()
             	this.hide()
                 swal("Enviado", "Comentario publicado con èxito", "success");
                 this.getReviewsCount();
             },
             failReview(data){
+                console.log
             	this.clearReview()
             	this.hide()
                 swal("Error", "No se ha publicado el Comentario", "error");
@@ -497,7 +559,7 @@ require('vue-image-lightbox/dist/vue-image-lightbox.min.css')
 
             },
            failReserv(data){
-           	                swal("Error", "No se ha reservado el lugar", "error");
+           	                swal("Error", "No se ha reservado el espacio", "error");
 			    	this.$refs.modalSuscribe.close();
 			    	this.clearReserv();
 
@@ -507,6 +569,9 @@ require('vue-image-lightbox/dist/vue-image-lightbox.min.css')
             	javascript:history.back()
             },
             mapLoaded(map){
+                
+                map.scrollZoom.disable();
+
             	map.addLayer({
 			        'id': 'points',
 			        
@@ -532,12 +597,13 @@ require('vue-image-lightbox/dist/vue-image-lightbox.min.css')
 			    el.style.backgroundImage = 'url(/img/iconlocation.png)';
 			    el.style.width = 30 + 'px';
 			    el.style.height = 85 + 'px';
-
+  this.defaultLat=data.lat;
+        this.defaultLon=data.lon;
 			   
 			    new mapboxgl.Marker()
-			        .setLngLat([-58.4389656,  -34.6016045])
+			        .setLngLat([this.defaultLat,  this.defaultLon])
 			        .addTo(map);
-				map.setCenter([-58.4389656,  -34.6016045]);
+				map.setCenter([this.defaultLat,  this.defaultLon]);
             }
         }
         ,

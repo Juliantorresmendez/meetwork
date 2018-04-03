@@ -10,6 +10,8 @@ class SpaceSite extends Model
     protected $table = 'site_space';
 
 
-  
+  public function deleteAllBySite($id){
+        return $this->where("site_id",$id)->delete();
+    }
    
 }

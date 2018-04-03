@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => 'local',
+    'default' => 's3',
 
     /*
     |--------------------------------------------------------------------------
@@ -57,10 +57,10 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_KEY'),
-            'secret' => env('AWS_SECRET'),
-            'region' => env('AWS_REGION'),
-            'bucket' => env('AWS_BUCKET'),
+            'key' => "AKIAJTRC7VJNDZMOMB5A",
+            'secret' => "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",
+            'region' => "us-east-1",
+            'bucket' => "meetworks",
         ],
 
     ],

@@ -20,20 +20,59 @@ export default {
             return str;
         },
         formatImagesGallery(str,searchStr,replaceStr){
-
-                
+           if(!!str){
                 searchStr = searchStr.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
                 
                 return str.replace(new RegExp(searchStr, 'gi'), replaceStr);
+           }
+                
+               
 
         },
+        formatesetresImages(id,image){
+            return "https://s3.amazonaws.com/meetworks/thumbnails/"+id+"/"+image
+        },
+        formatGallerySite(image,id){
+            return "https://s3.amazonaws.com/meetworks/thumbnails/"+id+"/"+image;
+            
+            
+        },
+        fotmatProfileLogo(image,id){
+            var image=this.formatImagesGallery(image,"full","medium");
+            return "https://s3.amazonaws.com/meetworks/thumbnails/"+id+"/logo/"+image
+        },
+        fotmatProfileLogoMap(image,id){
+            var image=this.formatImagesGallery(image,"full","small");
+            return "https://s3.amazonaws.com/meetworks/thumbnails/"+id+"/logo/"+image
+        },
         formatImagesLogo(str,size){
-                str=str.toLowerCase();
-                
-                str=str.replace(new RegExp("uploads", 'gi'), "thumbs");
-                str=str.replace(new RegExp("logo", 'gi'), "logo-"+size);
+               
                 return str;
 
+        },
+        isMobile(){
+          var isMobile = {
+                Android: function() {
+                    return navigator.userAgent.match(/Android/i);
+                },
+                BlackBerry: function() {
+                    return navigator.userAgent.match(/BlackBerry/i);
+                },
+                iOS: function() {
+                    return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+                },
+                Opera: function() {
+                    return navigator.userAgent.match(/Opera Mini/i);
+                },
+                Windows: function() {
+                    return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+                },
+                any: function() {
+                    return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+                }
+            };  
+            
+            return isMobile;
         },
         formatImagesSingleGallery(str){
             str=str.split(".");

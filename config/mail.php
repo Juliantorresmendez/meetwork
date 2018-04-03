@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
+    'driver' => env('MAIL_DRIVER', 'mail'),
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => "email-smtp.us-east-1.amazonaws.com",
+    'host' => "smtp.zoho.com",
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ return [
     */
 
   'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'info@alquilerdirecto.com.ar'),
+        'address' => env('MAIL_FROM_ADDRESS', 'reservas@meetwork.co'),
         'name' => env('MAIL_FROM_NAME', 'MeetWork'),
     ],
 
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' =>  "AKIAJH5JDWCLTB3LEJGQ",
-
-    'password' => "AmlB+Fchja+kDNNPrVLA2r7ScMY3/zQfVF37MTDQMWIE", 
+    'username' =>  "reservas@meetwork.co",
+ 
+    'password' => "123456789", 
 
     /*
     |--------------------------------------------------------------------------

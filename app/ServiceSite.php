@@ -14,5 +14,9 @@ class ServiceSite extends Model
         return $this->hasOne('App\Service','id', 'service_id');
     }
   
+      public function deleteAllBySite($id){
+        return $this->where("site_id",$id)->delete();
+    }
+    
    
 }

@@ -162,6 +162,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+//Riverskies\Laravel\MobileDetect\MobileDetectServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -177,9 +178,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
                 App\Providers\ResponseServiceProvider::class,
+Intervention\Image\ImageServiceProvider::class,
 
-'Folklore\Image\ImageServiceProvider',
 
+        'Kodeine\Acl\AclServiceProvider',
+GrahamCampbell\Security\SecurityServiceProvider::class
     ],
 
     /*
@@ -229,9 +232,13 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Input'     => Illuminate\Support\Facades\Input::class,
-        'Image' => 'Folklore\Image\Facades\Image',
+        'Image' => Intervention\Image\Facades\Image::class,
 
- 
-    ],
+
+        'Security' => GrahamCampbell\Security\Facades\Security::class,
+        'MobileDetect' => Riverskies\Laravel\MobileDetect\Facades\MobileDetect::class
+
+
+    ], 
 
 ];

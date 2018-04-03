@@ -3,12 +3,18 @@ import CreateNote from './components/CreateNote.vue';
 import Alert from './components/Alert.vue';
 import VModal from 'vue-js-modal'
 
-import VueAuthenticate from 'vue-authenticate'
-
-import VueLocalStorage from 'vue-localstorage'
  
+import VueLocalStorage from 'vue-localstorage'
+ import FBSignInButton from 'vue-facebook-signin-button'
+
 import VueLazyLoad from 'vue-lazyload'
 import VueTouch from 'vue-touch'
+import VueFormWizard from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+
+import VueTabs from 'vue-nav-tabs'
+import 'vue-nav-tabs/themes/vue-tabs.css'
+import VuejsDialog from "vuejs-dialog"
 
 var store = {
   state: {
@@ -19,6 +25,25 @@ var store = {
      this.state.route=route;
   }
 }
+
+Vue.use(VueTabs)
+
+Vue.use(FBSignInButton)
+Vue.use(VueFormWizard)
+
+ 
+// Tell Vue to install the plugin.
+Vue.use(VuejsDialog)
+
+const moment = require('moment')
+require('moment/locale/es')
+
+Vue.use(require('vue-moment'), {
+    moment
+})
+
+
+
 Vue.use(VModal)
 Vue.use(VueLocalStorage)
 Vue.use(VueLazyLoad)
@@ -31,13 +56,4 @@ Vue.component('create-note', CreateNote);
 Vue.component('alert', Alert);
 
 
-Vue.use(VueAuthenticate, {
-  baseUrl: 'http://localhost:3000', // Your API domain
-  
-  providers: {
-    github: {
-      clientId: '',
-      redirectUri: 'http://localhost:8080/auth/callback' // Your client app URL
-    }
-  }
-})
+ 

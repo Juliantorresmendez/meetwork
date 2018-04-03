@@ -17,15 +17,26 @@ class SiteReviews extends Model
    public function getReviewsBySite($site){
    		return $this->where("site_id",$site)
    		->orderBy("created_at","desc")
+                ->where("status_id",1)
    		->with("user")
-   		->take(10)
    		->get();
+   }
+   
+   
+      
+   public function getReviewBySite($id){
+   		return $this->where("id",$id)
+   		->orderBy("created_at","desc")
+   		->with("user")
+   		->first();
    }
 
 
    public function getReviewsAvg($site){
    		return $this
    		->where("site_id",$site)
+                                        ->where("status_id",1)
+
    		->avg("rating");
    }
 }

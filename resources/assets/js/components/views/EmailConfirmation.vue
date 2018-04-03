@@ -26,6 +26,10 @@
         </div>
 
 
+  <loading
+            :show="show"
+            :label="label">
+        </loading>
     </div>
 </template>
 
@@ -39,10 +43,19 @@ import loading from 'vue-full-loading'
             return {
               email:null,
               code:null,
+              show:false,
+              label: 'Validando código...',
+
            }
         },
         created: function () {
-          this.email=this.$root.$data.confirmationEmail;
+            if(!!this.$root.$data.confirmationEmail){
+                this.email=this.$root.$data.confirmationEmail;
+
+            }else{
+                              this.$router.push('login')
+
+            }
                 this.show=false;
         },  
         methods: {
@@ -59,27 +72,33 @@ import loading from 'vue-full-loading'
 
           resendCode(){
                             this.show=true;
-
             axios.get('/resendCode/')
                     .then(response => this.successResendCode(response.data))
                     .catch(error => this.errorResendCode(error.response.data));
           },
           successVerify(data){
+                        
+             if(!!data.success){
+                    Vue.localStorage.set('users', JSON.stringify(data.data))
+                    this.$root.$data.user=data.data;
                         swal("!Registro Exitoso!","El registro se ha hecho con éxito", "success");
 
-             if(!!data.success){
-                    this.$router.push('/login')
+                   window.location='/login';
                  }
 
                   if(!!data.error){
-                    this.$router.push('/register')
-                  }
+                    window.location='/register';
+                    swal("Error","Hay un error en la validación del codigo", "error");
+                  }      
           },
           errorVerify(data){
             swal("Error","Hay un error en la validación del codigo", "error");
 
           },
           validateCode(){
+              
+                          
+
                             this.show=true;
             if(this.code){
                axios.get('/register/verify/'+this.code+'/'+this.email+'/?page=1')

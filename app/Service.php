@@ -12,5 +12,7 @@ class Service extends Model
     public function findByName($name){
     	return $this->where("name",$name)->first();
     }
+    
+  
    
 }

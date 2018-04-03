@@ -27,7 +27,9 @@ const app = new Vue({
     router,
 
     created:function (){
-		this.$root.$data.user=JSON.parse(Vue.localStorage.get('users'))
+		//this.$root.$data.user=JSON.parse(Vue.localStorage.get('users'))
+                this.$root.$data.user=JSON.parse(login);
+                
 
     },
      methods: {
