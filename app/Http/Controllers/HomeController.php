@@ -325,6 +325,7 @@ if (strpos($http_response_header[0], "200")) {
     
     
     public function index(){
+        
             $agent = new Agent();
            if($agent->isMobile()){
               return  redirect()->to("/map");

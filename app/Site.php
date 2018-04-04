@@ -203,7 +203,7 @@ class Site extends Model
     $query->with("principal");
     $query->where("status_id",2);
 
-   return $query->paginate(20);
+   return $query->paginate(300);
 
     }
     
