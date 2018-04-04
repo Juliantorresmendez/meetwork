@@ -162,51 +162,51 @@
             </div>
         </sweet-modal>
 
-        <sweet-modal  ref="modalOnBoarding" class="container-on-boarding"  width="450">
+        <sweet-modal hide-close-button blocking  ref="modalOnBoarding" class="container-on-boarding"  width="450">
 
             <div class="On-boarding-container">
 
-                
 
-<carousel  :per-page="1"  :navigationEnabled="true" navigationNextLabel="Siguiente >" navigationPrevLabel="< Anterior"  paginationActiveColor="#576eae" paginationColor="#d5dbeb">
-  <slide>
-      <div class="container-slide">
-           <img src="/slides/step-1.png"/>
-                        <p class="title">¡Bienvenido!</p>
-                        <p class="description">A partir de este momento vas a tener disponible un espacio de trabajo para desarrollar tus ideas desde cualquier lugar de la ciudad.</p>
-      
-     
-      </div>
-     
-  </slide>
-  <slide>
-          <div class="container-slide">
 
-                        <img src="/slides/step-2.png"/>
-                        <p class="title">Espacios para tus ideas</p>
-                        <p class="description">Puedes reservar un espacio de trabajo en el café, bar o restaurante más cercano a tu ubicación. Con nosotros tienes una oficina donde quieras.</p>
-          </div>
+                <carousel  :per-page="1"  :navigationEnabled="true" navigationNextLabel="Siguiente >" navigationPrevLabel="< Anterior"  paginationActiveColor="#576eae" paginationColor="#d5dbeb">
+                    <slide>
+                        <div class="container-slide">
+                            <img src="/slides/step-1.png"/>
+                            <p class="title">¡Bienvenido!</p>
+                            <p class="description">A partir de este momento vas a tener disponible un espacio de trabajo para desarrollar tus ideas desde cualquier lugar de la ciudad.</p>
 
-  </slide>
-    
-     <slide>
-              <div class="container-slide">
 
-                        <img src="/slides/step-3.png"/>
-                        <p class="title">Haz de la ciudad tu oficina </p>
-                        <p class="description">Además vas a poder crear eventos, reservar salas de reuniones y espacios de estudio en donde tu inspiración se va a renovar todos los días.</p>
-              </div>
-  </slide>
-    
-    
-     <slide>
-                   <div class="container-slide">
+                        </div>
 
-        <img src="/slides/step-4.png"/>
-                        <button class="btn-green start-already-button"  @click="closeOnBoarding">¡Empecemos ya!</button>
-                   </div>
-  </slide>
-</carousel>
+                    </slide>
+                    <slide>
+                        <div class="container-slide">
+
+                            <img src="/slides/step-2.png"/>
+                            <p class="title">Espacios para tus ideas</p>
+                            <p class="description">Puedes reservar un espacio de trabajo en el café, bar o restaurante más cercano a tu ubicación. Con nosotros tienes una oficina donde quieras.</p>
+                        </div>
+
+                    </slide>
+
+                    <slide>
+                        <div class="container-slide">
+
+                            <img src="/slides/step-3.png"/>
+                            <p class="title">Haz de la ciudad tu oficina </p>
+                            <p class="description">Además vas a poder crear eventos, reservar salas de reuniones y espacios de estudio en donde tu inspiración se va a renovar todos los días.</p>
+                        </div>
+                    </slide>
+
+
+                    <slide>
+                        <div class="container-slide">
+
+                            <img src="/slides/step-4.png"/>
+                            <button class="btn-green start-already-button"  @click="closeOnBoarding">¡Empecemos ya!</button>
+                        </div>
+                    </slide>
+                </carousel>
 
 
             </div>
@@ -226,16 +226,14 @@
             import helpers from './helpers';
 
 
-import { Carousel, Slide } from 'vue-carousel';
+    import { Carousel, Slide } from 'vue-carousel';
 
 
-            import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
+    import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
 
             export default {
                 data() {
                     return {
-
-                      
 
                         temporalSite: null,
                         list: [],
@@ -272,7 +270,7 @@ import { Carousel, Slide } from 'vue-carousel';
                         geolocalize: false,
                         paintUserLocationFlag: false,
                         aleradyLocatedUser: false,
-                        flyselected:false
+                        flyselected: false
 
                     };
                 },
@@ -280,7 +278,7 @@ import { Carousel, Slide } from 'vue-carousel';
                 watch: {
 
                     selectedSpace: function (val) {
-                        this.show = true;
+                        // this.show = true;
                         var ids = [];
                         for (var i = 0; i < val.length; i++) {
                             ids.push(val[i].id);
@@ -292,7 +290,7 @@ import { Carousel, Slide } from 'vue-carousel';
 
                     },
                     selectedService: function (val) {
-                        this.show = true;
+                        //    this.show = true;
 
                         var ids = [];
                         for (var i = 0; i < val.length; i++) {
@@ -310,13 +308,13 @@ import { Carousel, Slide } from 'vue-carousel';
 
                 created: function () {
                     setTimeout(() => {
-                        this.show = true;
+                        // this.show = true;
                         //this.$refs.swiper.preventClicks(false);
                         //this.$refs.swiper.attachEvents();	
-                         
-                         if(!Vue.localStorage.get('onboarding')){
+
+                        if (!Vue.localStorage.get('onboarding')) {
                             this.$refs.modalOnBoarding.open();
-                         }
+                        }
 
                     }, 100)
 
@@ -327,24 +325,24 @@ import { Carousel, Slide } from 'vue-carousel';
                     this.lonUser = this.defaultLon;
 
 
-                    this.getSites(this.paginator, 1);
+                    this.getSitesJson(this.paginator, 1);
 
                     this.getFilters();
 
                     if (this.isMobile().any()) {
                         this.showMapFlag = false;
-                        console.log("es mobile")
+
                     } else {
-                        console.log("no es mobile")
+
                     }
 
 
 
                 }
-            
-            ,
+
+                ,
                 methods: {
-                    closeOnBoarding(){ 
+                    closeOnBoarding() {
                         Vue.localStorage.set('onboarding', "ok")
 
                         this.$refs.modalOnBoarding.close();
@@ -365,7 +363,7 @@ import { Carousel, Slide } from 'vue-carousel';
 
                             this.latUser = this.defaultLat;
                             this.lonUser = this.defaultLon;
-                            this.getSites(this.paginator, 1);
+                            // this.getSites(this.paginator, 1);
                             this.fly = true;
                         }
 
@@ -403,12 +401,13 @@ import { Carousel, Slide } from 'vue-carousel';
                         }
                         this.latUser = center.lat;
                         this.lonUser = center.lng;
-                        this.getSites(this.paginator, 1);
+                        //this.getSites(this.paginator, 1);
 
-                        console.log("termina e cargar");
+
                     },
                     mapGeolocate: function (map) {
-                        console.log(map);
+
+
                     },
                     getFilters: function (page, $state) {
                         axios.get('/getFilters')
@@ -418,23 +417,38 @@ import { Carousel, Slide } from 'vue-carousel';
                     formatFilters(data) {
                         this.optionsSpace = data.spaces;
                         this.optionsService = data.services;
-                        console.log(data);
 
+
+
+                    },
+                    getSitesJson(page, $state) {
+
+                        axios.get('https://s3.amazonaws.com/staticthigs/sites.json')
+                                .then(response => this.formatSites(response.data, $state))
+                                .catch(function (thrown) {
+                                    console.log(thrown);
+                                });
 
                     },
                     getSites: function (page, $state) {
 
+
+
                         axios.get('/sites?page=' + page + '&lat=' + this.latUser + '&lon=' + this.lonUser + '&services=' + this.serviceArray + '&selectedSpace=' + this.spaceArray)
                                 .then(response => this.formatSites(response.data, $state))
                                 .catch(error => console.log(error));
+
+                        /*
+                         axios.get('/sites?page=' + page + '&lat=' + this.latUser + '&lon=' + this.lonUser + '&services=' + this.serviceArray + '&selectedSpace=' + this.spaceArray)
+                         .then(response => this.formatSites(response.data, $state))
+                         .catch(error => console.log(error));*/
                     },
                     scrollIntoView(eleID, name) {
-                        console.log("cuando hace click " + eleID)
+
                         this.$router.push({name: 'view_site', params: {id: eleID, name: name}})
 
                     },
                     formatSites(data, $state) {
-
 
 
 
@@ -444,6 +458,8 @@ import { Carousel, Slide } from 'vue-carousel';
                         }
 
                         var data = data.data;
+
+
                         if (data.length == 0) {
 
                             this.noData = 1;
@@ -454,7 +470,7 @@ import { Carousel, Slide } from 'vue-carousel';
                                 } else {
                                     this.latUser = this.defaultLat;
                                     this.lonUser = this.defaultLon;
-                                    this.getSites(this.paginator, 1);
+                                    // this.getSites(this.paginator, 1);
                                     this.fly = true;
                                     // this.$refs.modalUserRegister.open();
                                 }
@@ -488,7 +504,7 @@ import { Carousel, Slide } from 'vue-carousel';
                         if ($state != 1) {
                             $state.loaded();
                         }
-                        this.show = false;
+                        // this.show = false;
 
 
 
@@ -508,10 +524,10 @@ import { Carousel, Slide } from 'vue-carousel';
 
                     },
                     goToSite() {
-                        console.log("aquii");
+
                     },
                     paintPlaces(map) {
-                        console.log(this.tempMapPlaces);
+
                         var _this = this;
                         for (var i = 0; i < this.tempMapPlaces.length; i++) {
 
@@ -549,17 +565,17 @@ import { Carousel, Slide } from 'vue-carousel';
                         }
 
                         this.lastPlaceAdd = this.tempMapPlaces[this.tempMapPlaces.length - 1].id;
-                        this.lastPlaceAddData=this.tempMapPlaces[this.tempMapPlaces.length - 1];
-                        
-                             if(this.flyselected){
-                             map.flyTo({
-                                center: [this.lastPlaceAddData.lon,this.lastPlaceAddData.lat],
+                        this.lastPlaceAddData = this.tempMapPlaces[this.tempMapPlaces.length - 1];
+
+                        if (this.flyselected) {
+                            map.flyTo({
+                                center: [this.lastPlaceAddData.lon, this.lastPlaceAddData.lat],
                                 zoom: 15,
                                 speed: 1,
                                 curve: 1,
                             });
-                            this.flyselected=false;
-                         }
+                            this.flyselected = false;
+                        }
 
 
 
@@ -638,8 +654,7 @@ import { Carousel, Slide } from 'vue-carousel';
                                 // Call getCurrentPosition with success and failure callbacks
                                 navigator.geolocation.getCurrentPosition(function (position) {
                                     if (!_this.geolocalize) {
-                                        _this.clearMap(map);
-                                        console.log("aqui  " + Vue.localStorage.get('lat'));
+                                        // _this.clearMap(map);
 
 
                                         _this.latUser = position.coords.latitude;
@@ -650,8 +665,7 @@ import { Carousel, Slide } from 'vue-carousel';
                                         if (!!position.coords.longitude) {
                                             Vue.localStorage.set('lon', position.coords.longitude)
                                         }
-                                        console.log("localizando->" + _this.latUser + _this.lonUser);
-                                        _this.getSites(_this.paginator, 1);
+                                        //  _this.getSites(_this.paginator, 1);
                                         _this.paintInLocationInMap = true;
 
                                         _this.paintUserLocation(map);
@@ -672,7 +686,7 @@ import { Carousel, Slide } from 'vue-carousel';
                                         Vue.localStorage.set('lon', _this.defaultLon)
 
 
-                                        _this.getSites(_this.paginator, 1);
+                                        //  _this.getSites(_this.paginator, 1);
                                         _this.paintInLocationInMap = true;
 
                                         _this.paintUserLocation(map);
@@ -729,7 +743,7 @@ import { Carousel, Slide } from 'vue-carousel';
                         el.style.class = 'localization-icon';
                         el.style.id = 'localization-icon';
                         el.style.height = 40 + 'px';
-                        console.log([this.lonUser, this.latUser]);
+
                         new mapboxgl.Marker(el)
                                 .setLngLat([this.lonUser, this.latUser])
                                 .addTo(map);
@@ -806,7 +820,7 @@ import { Carousel, Slide } from 'vue-carousel';
                             }
 
                             if (_this.searchNewPlaces()) {
-                                this.show = true;
+                                //         this.show = true;
 
                                 _this.paintPlaces(map);
                             }
@@ -815,7 +829,7 @@ import { Carousel, Slide } from 'vue-carousel';
 
 
                         navigator.geolocation.watchPosition(function (position) {
-                            //console.log(position);
+
                         })
 
 
@@ -834,9 +848,9 @@ import { Carousel, Slide } from 'vue-carousel';
 
                     infiniteHandler($state) {
                         if (this.noData == 0) {
-                            this.show = true;
+                            //     this.show = true;
 
-                            this.getSites(this.paginator, $state);
+                            //   this.getSites(this.paginator, $state);
                         }
 
 
@@ -845,7 +859,7 @@ import { Carousel, Slide } from 'vue-carousel';
                 },
                 components: {
                     InfiniteLoading, Mapbox, loading, SweetModal, Carousel,
-    Slide
+                    Slide
                 },
             };
 

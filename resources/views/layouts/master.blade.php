@@ -66,10 +66,12 @@
                <div class="logo-bars">
                    
                
-               <div class="logo">     
-               <router-link  :to="{name: 'allsite'}">
-                    <img alt="logo" src="{{asset("/img/logom.png")}}">
-               </router-link>
+               <div class="logo"> 
+                    <a href="/">
+                     <img alt="logo" src="{{asset("/img/logom.png")}}">
+                    </a>
+            
+                    
                   
                </div>
                <div class="links">

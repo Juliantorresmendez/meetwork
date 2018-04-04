@@ -38,8 +38,14 @@ export default {
             
         },
         fotmatProfileLogo(image,id){
-            var image=this.formatImagesGallery(image,"full","medium");
-            return "https://s3.amazonaws.com/meetworks/thumbnails/"+id+"/logo/"+image
+            
+            if(image){
+                  var image=this.formatImagesGallery(image,"full","medium");
+                return "https://s3.amazonaws.com/meetworks/thumbnails/"+id+"/logo/"+image
+            }else{
+                return "https://s3.amazonaws.com/meetworks/no-image-available.png";
+            }
+          
         },
         fotmatProfileLogoMap(image,id){
             var image=this.formatImagesGallery(image,"full","small");
