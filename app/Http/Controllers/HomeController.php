@@ -560,12 +560,17 @@ if (strpos($http_response_header[0], "200")) {
     
     public  function sendWelcome($id){
         $user= User::find($id);
-         Mail::send('email.welcomeMeetwork', array("user" => $user), function($message) use ($user) {
+        if($user){
+             Mail::send('email.welcomeMeetwork', array("user" => $user), function($message) use ($user) {
                     $message->to($user->email, $user->name)
                             ->subject('Bienvenido a meetwork');
-                                    echo "si lo envio che ".$user->email;
+                                    echo "Envio con exito al usuario  ".$user->email;
 
                 });
+        }else{
+            echo 'verifica que ese id sea de un usuario y que exista';
+        }
+        
     }
     
     public function LoginUser(Request $request) {
@@ -623,7 +628,8 @@ if (strpos($http_response_header[0], "200")) {
                     }else{
                         return response()->api(array("error" => array("Verifica el usuario o la contraseña")), false);
                     }
-                    
+
+
                     
                 } else {
                     return response()->api(array("name" => Auth::user()->name, "id" => Auth::id()), true);

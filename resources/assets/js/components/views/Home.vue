@@ -676,7 +676,7 @@
                                 }, function () {
 
                                     if (!_this.geolocalize) {
-                                        _this.clearMap(map);
+                                        //_this.clearMap(map);
 
 
                                         _this.latUser = _this.defaultLat;
