@@ -14,7 +14,7 @@
                 
                 
                 
-                <div class="col-md-6 filder-inputs"  v-show="space && !service" >
+                <div class="col-md-6 filder-inputs"  v-if="space && !service" >
                     <p>Tipos de espacios</p>
                     
                     <select multiple="multiple" v-model="selectedSpace">
@@ -23,12 +23,10 @@
 
                 </div>
 
-                <div class="col-md-6 filder-inputs" v-show="service && !space">
+                <div class="col-md-6 filder-inputs" v-if="service && !space">
                     <p>Servicios ofrecidos</p>
 
-
-                    
-                      <select multiple="multiple" v-model="selectedService">
+                    <select multiple="multiple" v-model="selectedService">
                         <option v-for="serviceOption in optionsService" v-bind:value="serviceOption">{{serviceOption.name}}</option>
                     </select>
                     
@@ -196,34 +194,30 @@
 
                 watch: {
 
-                    selectedSpace: function (val) {
-                        this.flyselected=true;
-                        this.show = true;
-                        this.hidden=true;
+                          selectedSpace: function (val) {
+
+                        // this.show = true;
                         var ids = [];
                         for (var i = 0; i < val.length; i++) {
                             ids.push(val[i].id);
                         }
                         this.spaceArray = ids
-                        this.clearData();
-                        this.clearMapFlag = true;
-                        this.getSites(this.paginator, 1);
+                        
+                        this.filterSelectData('space');
+
+                   
 
                     },
                     selectedService: function (val) {
-                        this.show = true;
-                        this.flyselected=true;
-                        this.hidden=true;
+                        //    this.show = true;
 
                         var ids = [];
                         for (var i = 0; i < val.length; i++) {
                             ids.push(val[i].id);
                         }
                         this.serviceArray = ids
-
-                        this.clearData();
-                        this.clearMapFlag = true;
-                        this.getSites(this.paginator, 1);
+                        
+                        this.filterSelectData('service');
 
                     }
                 },
@@ -253,7 +247,7 @@
                     this.latUser = Vue.localStorage.get('lat');
                     this.lonUser = Vue.localStorage.get('lon');
 
-                    this.getSites(this.paginator, 1);
+                    this.getSitesJson(this.paginator, 1);
 
                     this.getFilters();
 
@@ -261,6 +255,80 @@
                 }
                 ,
                 methods: {
+                    
+                    
+                    filterCat(type, idArray, object) {
+
+                        var result = null;
+                        result = object.map(function (objectIndi) {
+                            var selection = null;
+
+                            if (type == "service") {
+
+                                selection = objectIndi.services.map(function (i) {
+                                    if (idArray.indexOf(i.id) != -1) {
+                                        return objectIndi;
+                                    }
+                                });
+
+                            } else {
+
+                                selection = objectIndi.spaces.map(function (i) {
+                                    if (idArray.indexOf(i.id) != -1) {
+                                        return objectIndi;
+                                    }
+
+                                });
+
+                            }
+                            var resultselection;
+                            for (var o = 0; o < selection.length; o++) {
+                                if (!!selection[o]) {
+                                    resultselection = selection[o];
+                                }
+                            }
+
+                            if (!!resultselection) {
+                                return resultselection;
+                            }
+                        });
+                        var finalResult = [];
+
+                        for (var i = 0; i < result.length; i++) {
+                            if (!!result[i]) {
+                                finalResult.push(result[i]);
+                            }
+                        }
+                        if (!!finalResult) {
+                            return finalResult;
+                        }
+                    },
+                    
+                    
+                    filterSelectData(type){
+                        var resultFilter = this.filterCat(type, this.spaceArray, this.list);
+                        this.clearMapFlag = true;
+                        var _this = this;
+
+                        if (resultFilter.length > 0) {
+                            this.temporalSites = this.list;
+
+                            this.clearData();
+                            setTimeout(function () {
+                                _this.formatSites({data: resultFilter}, 1);
+
+                            }, 400);
+
+                        } else {
+
+                            this.clearData();
+                            setTimeout(function () {
+                                _this.formatSites({data: _this.temporalSites}, 1);
+                                this.temporalSites = [];
+
+                            }, 400);
+                        }
+                    },
                     showSpacesDropdown(){
                         
                         console.log("aqui espacios");
@@ -321,7 +389,7 @@
                         }
                         this.latUser = center.lat;
                         this.lonUser = center.lng;
-                        this.getSites(this.paginator, 1);
+                        //this.getSites(this.paginator, 1);
 
                         console.log("termina e cargar");
                     },
@@ -336,6 +404,15 @@
                     formatFilters(data) {
                         this.optionsSpace = data.spaces;
                         this.optionsService = data.services;
+
+                    },
+                    getSitesJson(page, $state) {
+
+                        axios.get('https://s3.amazonaws.com/staticthigs/sites.json')
+                                .then(response => this.formatSites(response.data, $state))
+                                .catch(function (thrown) {
+                                    console.log(thrown);
+                                });
 
                     },
                     getSites: function (page, $state) {
@@ -424,14 +501,8 @@
 
                                 el.addEventListener('click', function () {
                                     var site = JSON.parse(this.name);
-                                    //_this.scrollIntoView(id,name);
-
-                                    //console.log(map);
+                                
                                     _this.temporalSite = site;
-
-
-
-
 
                                 });
 
@@ -541,7 +612,7 @@
                                         Vue.localStorage.set('lon', position.coords.longitude)
                                     }
 
-                                    _this.getSites(_this.paginator, 1);
+                                   // _this.getSites(_this.paginator, 1);
                                     _this.paintInLocationInMap = true;
 
                                     _this.paintUserLocation(map);
@@ -662,12 +733,12 @@
                                 _this.paintPlaces(map);
                             }
 
-                        }, 300);
+                        }, 250);
 
 
                         navigator.geolocation.watchPosition(function (position) {
-                            //console.log(position);
-                        })
+
+    })
 
 
 

@@ -7,14 +7,21 @@
             <div class="row filterMap">
                 <div class="col-md-6 filder-inputs" v-bind:class="{'is-hidden' : hidden,'is-show' : !hidden  }" >
                     <p>Tipos de espacios</p>
-                    <v-select multiple label="name" :options="optionsSpace" v-model="selectedSpace"></v-select>
+
+                    <select multiple="multiple" v-model="selectedSpace">
+                        <option v-for="spaceOption in optionsSpace" v-bind:value="spaceOption">{{spaceOption.name}}</option>
+                    </select>
+                
                 </div>
 
                 <div class="col-md-6 filder-inputs" v-bind:class="{'is-hidden' : hidden,'is-show' : !hidden }">
                     <p>Servicios ofrecidos</p>
 
-                    <v-select multiple label="name"  :options="optionsService" v-model="selectedService"></v-select>
-
+ 
+                      <select multiple="multiple" v-model="selectedService">
+                        <option v-for="serviceOption in optionsService" v-bind:value="serviceOption">{{serviceOption.name}}</option>
+                    </select>
+                    
                 </div>
                 <div class="col-md-6 col-6">
                     <button class="btn-purple filterMobile btn-small" v-on:click="hidden = !hidden">Filtros</button>
@@ -235,29 +242,30 @@ import { Carousel, Slide } from 'vue-carousel';
                 watch: {
 
                     selectedSpace: function (val) {
-                        this.show = true;
+
+                        // this.show = true;
                         var ids = [];
                         for (var i = 0; i < val.length; i++) {
                             ids.push(val[i].id);
                         }
                         this.spaceArray = ids
-                        this.clearData();
-                        this.clearMapFlag = true;
-                        this.getSites(this.paginator, 1);
+                        
+                        this.filterSelectData('space');
+
+                        this.hidden=true;
 
                     },
                     selectedService: function (val) {
-                        this.show = true;
+                        //    this.show = true;
 
                         var ids = [];
                         for (var i = 0; i < val.length; i++) {
                             ids.push(val[i].id);
                         }
                         this.serviceArray = ids
-
-                        this.clearData();
-                        this.clearMapFlag = true;
-                        this.getSites(this.paginator, 1);
+                        
+                        this.filterSelectData('service');
+                        this.hidden=true;
 
                     }
                 },
@@ -278,7 +286,7 @@ import { Carousel, Slide } from 'vue-carousel';
                     this.lonUser = Vue.localStorage.get('lon');
                         console.log("fefault lat"+this.latUser);
 
-                    this.getSites(this.paginator, 1);
+                    this.getSitesJson(this.paginator, 1);
                     
                     this.getFilters();
                     
@@ -292,6 +300,76 @@ import { Carousel, Slide } from 'vue-carousel';
                 }
                 ,
                 methods: {
+                    filterCat(type, idArray, object) {
+
+                        var result = null;
+                        result = object.map(function (objectIndi) {
+                            var selection = null;
+
+                            if (type == "service") {
+
+                                selection = objectIndi.services.map(function (i) {
+                                    if (idArray.indexOf(i.id) != -1) {
+                                        return objectIndi;
+                                    }
+                                });
+
+                            } else {
+
+                                selection = objectIndi.spaces.map(function (i) {
+                                    if (idArray.indexOf(i.id) != -1) {
+                                        return objectIndi;
+                                    }
+
+                                });
+
+                            }
+                            var resultselection;
+                            for (var o = 0; o < selection.length; o++) {
+                                if (!!selection[o]) {
+                                    resultselection = selection[o];
+                                }
+                            }
+
+                            if (!!resultselection) {
+                                return resultselection;
+                            }
+                        });
+                        var finalResult = [];
+
+                        for (var i = 0; i < result.length; i++) {
+                            if (!!result[i]) {
+                                finalResult.push(result[i]);
+                            }
+                        }
+                        if (!!finalResult) {
+                            return finalResult;
+                        }
+                    },
+                    filterSelectData(type){
+                        var resultFilter = this.filterCat(type, this.spaceArray, this.list);
+                        this.clearMapFlag = true;
+                        var _this = this;
+
+                        if (resultFilter.length > 0) {
+                            this.temporalSites = this.list;
+
+                            this.clearData();
+                            setTimeout(function () {
+                                _this.formatSites({data: resultFilter}, 1);
+
+                            }, 400);
+
+                        } else {
+
+                            this.clearData();
+                            setTimeout(function () {
+                                _this.formatSites({data: _this.temporalSites}, 1);
+                                this.temporalSites = [];
+
+                            }, 400);
+                        }
+                    },
                      closeOnBoarding(){
                                               Vue.localStorage.set('onboarding', "ok")
 
@@ -367,6 +445,16 @@ import { Carousel, Slide } from 'vue-carousel';
                         this.optionsSpace = data.spaces;
                         this.optionsService = data.services;
                         console.log(data);
+                    },
+                    
+                    getSitesJson(page, $state) {
+
+                        axios.get('https://s3.amazonaws.com/staticthigs/sites.json')
+                                .then(response => this.formatSites(response.data, $state))
+                                .catch(function (thrown) {
+                                    console.log(thrown);
+                                });
+
                     },
                     getSites: function (page, $state) {
 

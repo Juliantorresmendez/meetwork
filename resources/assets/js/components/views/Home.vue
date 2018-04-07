@@ -270,23 +270,28 @@
                         geolocalize: false,
                         paintUserLocationFlag: false,
                         aleradyLocatedUser: false,
-                        flyselected: false
+                        flyselected: false,
+                        temporalSites: []
 
                     };
                 },
+                computed: {
 
+                },
                 watch: {
 
                     selectedSpace: function (val) {
+
                         // this.show = true;
                         var ids = [];
                         for (var i = 0; i < val.length; i++) {
                             ids.push(val[i].id);
                         }
                         this.spaceArray = ids
-                        this.clearData();
-                        this.clearMapFlag = true;
-                        this.getSites(this.paginator, 1);
+                        
+                        this.filterSelectData('space');
+
+                   
 
                     },
                     selectedService: function (val) {
@@ -297,10 +302,11 @@
                             ids.push(val[i].id);
                         }
                         this.serviceArray = ids
-
-                        this.clearData();
+                        
+                        this.filterSelectData('service');
+                        /*this.clearData();
                         this.clearMapFlag = true;
-                        this.getSites(this.paginator, 1);
+                        this.getSites(this.paginator, 1);*/
 
                     }
                 },
@@ -342,6 +348,78 @@
 
                 ,
                 methods: {
+                    
+                    filterSelectData(type){
+                        var resultFilter = this.filterCat(type, this.spaceArray, this.list);
+                        this.clearMapFlag = true;
+                        var _this = this;
+
+                        if (resultFilter.length > 0) {
+                            this.temporalSites = this.list;
+
+                            this.clearData();
+                            setTimeout(function () {
+                                _this.formatSites({data: resultFilter}, 1);
+
+                            }, 400);
+
+                        } else {
+
+                            this.clearData();
+                            setTimeout(function () {
+                                _this.formatSites({data: _this.temporalSites}, 1);
+                                this.temporalSites = [];
+
+                            }, 400);
+                        }
+                    },
+                    filterCat(type, idArray, object) {
+
+                        var result = null;
+                        result = object.map(function (objectIndi) {
+                            var selection = null;
+
+                            if (type == "service") {
+
+                                selection = objectIndi.services.map(function (i) {
+                                    if (idArray.indexOf(i.id) != -1) {
+                                        return objectIndi;
+                                    }
+                                });
+
+                            } else {
+
+                                selection = objectIndi.spaces.map(function (i) {
+                                    if (idArray.indexOf(i.id) != -1) {
+                                        return objectIndi;
+                                    }
+
+                                });
+
+                            }
+                            var resultselection;
+                            for (var o = 0; o < selection.length; o++) {
+                                if (!!selection[o]) {
+                                    resultselection = selection[o];
+                                }
+                            }
+
+                            if (!!resultselection) {
+                                return resultselection;
+                            }
+                        });
+                        var finalResult = [];
+
+                        for (var i = 0; i < result.length; i++) {
+                            if (!!result[i]) {
+                                finalResult.push(result[i]);
+                            }
+                        }
+                        if (!!finalResult) {
+                            return finalResult;
+                        }
+                    },
+
                     closeOnBoarding() {
                         Vue.localStorage.set('onboarding', "ok")
 
@@ -383,9 +461,8 @@
 
                     },
                     sourcedataMap(map) {
-                        /*	console.log("sourcedataMap");
-                         this.show=true;
-                         */
+                        
+                        
                     },
                     showMapView() {
                         this.$router.push({name: 'map'})
@@ -438,10 +515,7 @@
                                 .then(response => this.formatSites(response.data, $state))
                                 .catch(error => console.log(error));
 
-                        /*
-                         axios.get('/sites?page=' + page + '&lat=' + this.latUser + '&lon=' + this.lonUser + '&services=' + this.serviceArray + '&selectedSpace=' + this.spaceArray)
-                         .then(response => this.formatSites(response.data, $state))
-                         .catch(error => console.log(error));*/
+                      
                     },
                     scrollIntoView(eleID, name) {
 
@@ -449,8 +523,6 @@
 
                     },
                     formatSites(data, $state) {
-
-
 
                         this.clearMapFlag = false;
                         if (data.next_page_url == null) {
@@ -483,6 +555,8 @@
 
 
                         } else {
+
+
                             this.firstLoad = 1;
                             var sites = [];
                             for (var i = 0; i < data.length; i++) {
@@ -499,7 +573,9 @@
                             this.list = this.list.concat(sites);
 
                             this.tempMapPlaces = sites;
+
                         }
+
 
                         if ($state != 1) {
                             $state.loaded();
@@ -512,6 +588,7 @@
                     },
 
                     searchNewPlaces() {
+
                         var newData = false
                         if (this.tempMapPlaces.length > 0) {
                             if (this.tempMapPlaces[this.tempMapPlaces.length - 1].id != this.lastPlaceAdd) {
@@ -655,7 +732,7 @@
                                 navigator.geolocation.getCurrentPosition(function (position) {
                                     if (!_this.geolocalize) {
                                         // _this.clearMap(map);
-
+ 
 
                                         _this.latUser = position.coords.latitude;
                                         _this.lonUser = position.coords.longitude;

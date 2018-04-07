@@ -87,7 +87,8 @@ use RegistersUsers;
                 $user = User::find($user->id);
                 $user->confirmation_code = $confirmation_code;
                 
-            if($request->has("social")){
+            if($request->get("social")!=null){
+                
                 
                 $avatarFacebook='http://graph.facebook.com/'.$request->get("social").'/picture?type=large';
 
